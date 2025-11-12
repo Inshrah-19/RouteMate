@@ -1,0 +1,9 @@
+# Node.js dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Build or output folders (if any)
+dist/
+build/
