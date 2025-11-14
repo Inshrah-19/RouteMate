@@ -8,7 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const routeRoutes = require('./routes/routeRoutes');
 const busRoutes = require('./routes/busRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
-
+const favoritesRoutes = require('./routes/favoritesRoutes');
 const app = express();
 
 // Middleware
@@ -20,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/routes', routeRoutes);
 app.use('/api/buses', busRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
