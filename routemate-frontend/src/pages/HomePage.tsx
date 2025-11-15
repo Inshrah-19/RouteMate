@@ -4,19 +4,7 @@ import { useState, useContext, useRef, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-import {
-  Search,
-  MapPin,
-  Navigation,
-  Clock,
-  Heart,
-  Users,
-  Filter,
-  ChevronRight,
-  HelpCircle,
-  ChevronDown,
-  TrendingUp,
-} from "lucide-react"
+import { Search, MapPin, Navigation, Clock, Heart, Users, Filter, ChevronRight, HelpCircle, ChevronDown, TrendingUp } from 'lucide-react'
 import { AppContext } from "../App"
 import { toast } from "sonner"
 import imgHero from "../assets/bus.png"
@@ -43,8 +31,7 @@ export default function HomePage() {
 
   const handleSearch = () => {
     if (!context?.user && !context?.isGuest) {
-      context?.setShowAuthModal(true)
-      context?.setAuthMode("signin")
+      navigate("/signin")
       return
     }
     if (from && to) {
@@ -62,9 +49,7 @@ export default function HomePage() {
 
   const handleFeatureClick = (path: string) => {
     if (!context?.user && !context?.isGuest) {
-      context?.setShowAuthModal(true)
-      context?.setAuthMode("signin")
-      toast.error("Please sign in to access this feature")
+      navigate("/signin")
       return
     }
 
