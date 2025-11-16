@@ -1,6 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Clock, ArrowRight } from 'lucide-react';
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  ArrowRight,
+} from "lucide-react";
 import imgLogo from "../assets/logo.png";
 
 export default function Footer() {
@@ -13,17 +23,26 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full overflow-hidden shadow-2xl bg-gradient-to-br from-white to-purple-100 flex items-center justify-center p-2.5">
-                <img src={imgLogo} alt="RouteMate Logo" className="w-full h-full object-contain" />
-              </div>
+              <img
+                src={imgLogo}
+                alt="RouteMate Logo"
+                className="h-14 w-auto object-contain scale-150 mr-4"
+                style={{ transformOrigin: "center" }}
+              />
               <div>
-                <h2 className="text-white text-[32px] font-bold leading-none mb-1">RouteMate</h2>
-                <p className="text-[#e0c7f0] text-[15px] font-medium">Smart Transport Solution</p>
+                <h2 className="text-white text-[32px] font-bold leading-none mb-1">
+                  RouteMate
+                </h2>
+                <p className="text-[#e0c7f0] text-[15px] font-medium">
+                  Smart Transport Solution
+                </p>
               </div>
             </div>
+
             <p className="text-[#e0c7f0] text-[15px] mb-6 leading-relaxed">
-              Your intelligent companion for seamless city travel. Track buses in real-time, plan your journey,
-              and never miss a ride with our smart transportation solution.
+              Your intelligent companion for seamless city travel. Track buses
+              in real-time, plan your journey, and never miss a ride with our
+              smart transportation solution.
             </p>
 
             {/* Contact Info */}
@@ -60,25 +79,42 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white text-[20px] font-bold mb-6">Quick Links</h3>
+            <h3 className="text-white text-[20px] font-bold mb-6">
+              Quick Links
+            </h3>
             <div className="space-y-3">
-              <Link to="/home" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Home</span>
               </Link>
-              <Link to="/timetables" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/timetables"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Bus Schedules</span>
               </Link>
-              <Link to="/live-tracking" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/live-tracking"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Live Tracking</span>
               </Link>
-              <Link to="/favorites" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/favorites"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>My Favorites</span>
               </Link>
-              <Link to="/help" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/help"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Help & Support</span>
               </Link>
@@ -89,23 +125,38 @@ export default function Footer() {
           <div>
             <h3 className="text-white text-[20px] font-bold mb-6">Services</h3>
             <div className="space-y-3">
-              <Link to="/search" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/search"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Route Planning</span>
               </Link>
-              <Link to="/timetables" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/timetables"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Time Tables</span>
               </Link>
-              <Link to="/live-tracking" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/live-tracking"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Real-time Updates</span>
               </Link>
-              <Link to="/home" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Mobile App</span>
               </Link>
-              <Link to="/admin" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/admin"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Admin Access</span>
               </Link>
@@ -116,19 +167,31 @@ export default function Footer() {
           <div>
             <h3 className="text-white text-[20px] font-bold mb-6">Legal</h3>
             <div className="space-y-3 mb-6">
-              <Link to="/home" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Privacy Policy</span>
               </Link>
-              <Link to="/home" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Terms of Service</span>
               </Link>
-              <Link to="/home" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Cookie Policy</span>
               </Link>
-              <Link to="/home" className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group">
+              <Link
+                to="/home"
+                className="flex items-center gap-2 text-[#e0c7f0] hover:text-white hover:translate-x-1 transition-all group"
+              >
                 <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span>Accessibility</span>
               </Link>
@@ -161,19 +224,32 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white border-opacity-20 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-[#e0c7f0] text-center md:text-left">
-            © {currentYear} RouteMate. All rights reserved. Made with ❤️ for smart transportation.
+            © {currentYear} RouteMate. All rights reserved. Made with ❤️ for
+            smart transportation.
           </p>
           <div className="flex gap-6">
-            <Link to="/home" className="text-[#e0c7f0] hover:text-white transition-colors text-sm">
+            <Link
+              to="/home"
+              className="text-[#e0c7f0] hover:text-white transition-colors text-sm"
+            >
               About Us
             </Link>
-            <Link to="/home" className="text-[#e0c7f0] hover:text-white transition-colors text-sm">
+            <Link
+              to="/home"
+              className="text-[#e0c7f0] hover:text-white transition-colors text-sm"
+            >
               Careers
             </Link>
-            <Link to="/help" className="text-[#e0c7f0] hover:text-white transition-colors text-sm">
+            <Link
+              to="/help"
+              className="text-[#e0c7f0] hover:text-white transition-colors text-sm"
+            >
               Contact
             </Link>
-            <Link to="/home" className="text-[#e0c7f0] hover:text-white transition-colors text-sm">
+            <Link
+              to="/home"
+              className="text-[#e0c7f0] hover:text-white transition-colors text-sm"
+            >
               Blog
             </Link>
           </div>

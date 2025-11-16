@@ -1,67 +1,67 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useContext } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import { AppContext } from "../App"
-import { toast } from "sonner"
-import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from "lucide-react"
-import imgLogo from "../assets/logo.png"
-import { authAPI } from "../services/api"
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AppContext } from "../App";
+import { toast } from "sonner";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from "lucide-react";
+import imgLogo from "../assets/logo.png";
+import { authAPI } from "../services/api";
 
 export default function SignInPage() {
-  const context = useContext(AppContext)
-  const navigate = useNavigate()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const context = useContext(AppContext);
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       if (!email || !password) {
-        toast.error("Please enter your credentials")
-        setLoading(false)
-        return
+        toast.error("Please enter your credentials");
+        setLoading(false);
+        return;
       }
 
-      const response = await authAPI.login({ email, password })
+      const response = await authAPI.login({ email, password });
 
       // Store token and user data
-      localStorage.setItem("token", response.token)
-      localStorage.setItem("user", JSON.stringify(response.user))
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
 
       context?.setUser({
         id: String(response.user.id),
         name: response.user.fullName,
         email: response.user.email,
         isAdmin: response.user.role === "admin",
-      })
+      });
 
       if (response.user.role === "admin") {
-        toast.success("Welcome back, Admin! You have full access.")
-        navigate("/admin")
+        toast.success("Welcome back, Admin! You have full access.");
+        navigate("/admin");
       } else {
-        toast.success("Welcome back! Successfully signed in.")
-        navigate("/home")
+        toast.success("Welcome back! Successfully signed in.");
+        navigate("/home");
       }
     } catch (error: any) {
-      toast.error(error.message || "Login failed")
+      toast.error(error.message || "Login failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleGuestAccess = () => {
-    context?.setIsGuest(true)
-    toast.success("Continuing as guest - Limited features available")
-    navigate("/home")
-  }
+    context?.setIsGuest(true);
+    toast.success("Continuing as guest - Limited features available");
+    navigate("/home");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#6412b4] via-[#9333ea] to-[#c084fc] flex items-center justify-center p-6 relative overflow-hidden">
@@ -74,12 +74,18 @@ export default function SignInPage() {
         {/* ... existing left side branding ... */}
         <div className="hidden lg:flex flex-col justify-center items-start text-white p-12">
           <div className="mb-8">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#6412b4] to-[#9333ea] shadow-2xl flex items-center justify-center mb-6 p-3">
-              <img src={imgLogo || "/placeholder.svg"} alt="RouteMate" className="w-full h-full object-contain" />
-            </div>
-            <h1 className="text-[56px] font-extrabold leading-tight mb-4">Welcome Back to RouteMate</h1>
+            <img
+              src={imgLogo}
+              alt="RouteMate Logo"
+              className="h-20 w-auto object-contain mr-5 drop-shadow-[0_0_5px_rgba(255,255,255,0.6)]"
+            />
+
+            <h1 className="text-[56px] font-extrabold leading-tight mb-4">
+              Welcome Back to RouteMate
+            </h1>
             <p className="text-[20px] text-white/90 leading-relaxed mb-8">
-              Your intelligent companion for seamless city travel. Track buses in real-time and never miss a ride.
+              Your intelligent companion for seamless city travel. Track buses
+              in real-time and never miss a ride.
             </p>
           </div>
 
@@ -104,23 +110,34 @@ export default function SignInPage() {
             </div>
           </div>
 
-          <div className="text-[14px] text-white/70">© 2025 RouteMate. Smart Transport Solution.</div>
+          <div className="text-[14px] text-white/70">
+            © 2025 RouteMate. Smart Transport Solution.
+          </div>
         </div>
 
         {/* Right Side - Sign In Form */}
         <div className="flex items-center justify-center">
           <div className="w-full max-w-md bg-white rounded-[32px] shadow-2xl p-10">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#6412b4] to-[#9333ea] shadow-lg flex items-center justify-center mb-4 p-2.5 lg:hidden">
-                <img src={imgLogo || "/placeholder.svg"} alt="RouteMate" className="w-full h-full object-contain" />
-              </div>
-              <h2 className="text-[32px] font-extrabold text-[#2c084e] mb-2">Sign In</h2>
-              <p className="text-[15px] text-[#6a7282]">Enter your credentials to access your account</p>
+              <img
+                src={imgLogo}
+                alt="RouteMate Logo"
+                className="h-24 w-auto object-contain drop-shadow-[0_0_5px_rgba(255,255,255,0.7)] mx-auto lg:hidden"
+              />
+
+              <h2 className="text-[32px] font-extrabold text-[#2c084e] mb-2">
+                Sign In
+              </h2>
+              <p className="text-[15px] text-[#6a7282]">
+                Enter your credentials to access your account
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">Email Address</label>
+                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">
+                  Email Address
+                </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                   <input
@@ -134,7 +151,9 @@ export default function SignInPage() {
               </div>
 
               <div>
-                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">Password</label>
+                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">
+                  Password
+                </label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                   <input
@@ -149,7 +168,11 @@ export default function SignInPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#6a7282] hover:text-[#6412b4]"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -162,9 +185,14 @@ export default function SignInPage() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="w-4 h-4 rounded border-2 border-gray-300 text-[#6412b4] focus:ring-2 focus:ring-purple-200"
                   />
-                  <span className="text-[14px] text-[#2c084e]">Remember me</span>
+                  <span className="text-[14px] text-[#2c084e]">
+                    Remember me
+                  </span>
                 </label>
-                <button type="button" className="text-[14px] text-[#6412b4] hover:text-[#9333ea] font-semibold">
+                <button
+                  type="button"
+                  className="text-[14px] text-[#6412b4] hover:text-[#9333ea] font-semibold"
+                >
                   Forgot Password?
                 </button>
               </div>
@@ -174,7 +202,9 @@ export default function SignInPage() {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-[#6412b4] to-[#9333ea] text-white py-3.5 rounded-xl hover:shadow-xl hover:shadow-purple-500/40 hover:scale-[1.02] transition-all text-[16px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <span>{loading ? "Signing In..." : "Sign In to Your Account"}</span>
+                <span>
+                  {loading ? "Signing In..." : "Sign In to Your Account"}
+                </span>
                 <ArrowRight className="w-5 h-5" />
               </button>
 
@@ -183,7 +213,9 @@ export default function SignInPage() {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="px-4 bg-white text-[14px] text-[#6a7282] font-medium">or</span>
+                  <span className="px-4 bg-white text-[14px] text-[#6a7282] font-medium">
+                    or
+                  </span>
                 </div>
               </div>
 
@@ -199,7 +231,10 @@ export default function SignInPage() {
             <div className="text-center mt-8 pt-6 border-t border-gray-100">
               <p className="text-[15px] text-[#6a7282]">
                 Don't have an account?{" "}
-                <Link to="/signup" className="text-[#6412b4] font-bold hover:text-[#9333ea]">
+                <Link
+                  to="/signup"
+                  className="text-[#6412b4] font-bold hover:text-[#9333ea]"
+                >
                   Sign up for free
                 </Link>
               </p>
@@ -208,5 +243,5 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

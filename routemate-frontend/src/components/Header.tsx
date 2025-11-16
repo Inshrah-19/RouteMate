@@ -1,18 +1,41 @@
 import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  Home,
-  Clock,
-  Map,
-  Heart,
-  User,
-  Settings,
-  HelpCircle,
-  LogOut,
-  UserCircle,
-  Menu,
-} from "lucide-react";
+import { Home, Clock, Map, Heart, User, Menu, ArrowLeft } from "lucide-react";
 import { AppContext } from "../App";
+
+// Import dropdown components if they exist, otherwise create simple alternatives
+const DropdownItem = ({ icon, title, onClick }: any) => (
+  <button
+    onClick={onClick}
+    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-purple-50 transition-colors text-[#2c084e] text-left font-medium"
+  >
+    {icon}
+    <span>{title}</span>
+  </button>
+);
+
+const ProfileDropdown = ({ navigate, handleLogout, closeMenu }: any) => (
+  <>
+    <button
+      onClick={() => {
+        navigate("/profile");
+        closeMenu();
+      }}
+      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-purple-50 transition-colors text-[#2c084e] text-left font-medium"
+    >
+      <User className="w-5 h-5 text-[#6412b4]" />
+      <span>Profile</span>
+    </button>
+    <button
+      onClick={handleLogout}
+      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors text-red-600 text-left font-medium border-t border-purple-100"
+    >
+      <ArrowLeft className="w-5 h-5" />
+      <span>Logout</span>
+    </button>
+  </>
+);
+
 import imgLogo from "../assets/logo.png";
 
 export default function Header() {
@@ -27,7 +50,6 @@ export default function Header() {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
@@ -51,8 +73,8 @@ export default function Header() {
     location.pathname === path || location.pathname.startsWith(path);
 
   const handleLogout = () => {
-    context?.setUser(null);
-    context?.setIsGuest(false);
+    context?.setUser?.(null);
+    context?.setIsGuest?.(false);
     setShowProfileMenu(false);
     setMobileMenuOpen(false);
     navigate("/home");
@@ -61,6 +83,14 @@ export default function Header() {
   const handleAuthClick = () => {
     setMobileMenuOpen(false);
     navigate("/signin");
+  };
+
+  const handleGoBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/home");
+    }
   };
 
   const navItems = [
@@ -73,9 +103,19 @@ export default function Header() {
   return (
     <header className="bg-white/90 backdrop-blur-xl border-b-2 border-white/60 sticky top-0 z-40 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-4 flex items-center justify-between">
-
-        {/* Left: Menu + Logo */}
+        {/* Left: Back Button + Menu + Logo */}
         <div className="flex items-center gap-1 sm:gap-2">
+          {location.pathname !== "/home" && (
+            <button
+              onClick={handleGoBack}
+              className="p-2 rounded-lg hover:bg-purple-100 transition-colors hover:scale-110 active:scale-95"
+              title="Go back to previous page"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#2c084e]" />
+            </button>
+          )}
+
           {/* Mobile Menu */}
           <div className="relative md:hidden">
             <button
@@ -114,13 +154,13 @@ export default function Header() {
             className="flex items-center gap-1 cursor-pointer"
             onClick={() => navigate("/home")}
           >
-            <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg bg-gradient-to-br from-[#6412b4] to-[#9333ea] flex items-center justify-center p-1.5">
-              <img
-                src={imgLogo}
-                alt="RouteMate Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <img
+              src={imgLogo}
+              alt="RouteMate Logo"
+              className="h-14 w-auto object-contain scale-150 mr-4"
+              style={{ transformOrigin: "center" }}
+            />
+
             <div className="flex flex-col">
               <h1 className="text-[23px] sm:text-[26px] font-bold leading-none text-[#2c084e]">
                 RouteMate
@@ -148,7 +188,9 @@ export default function Header() {
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 ${active ? "text-white" : "text-[#6412b4]"}`}
+                  className={`w-5 h-5 ${
+                    active ? "text-white" : "text-[#6412b4]"
+                  }`}
                 />
                 <span>{item.label}</span>
               </button>
@@ -169,10 +211,10 @@ export default function Header() {
                 </div>
                 <div className="flex flex-col text-left">
                   <p className="text-[14px] font-semibold text-[#2c084e] leading-none truncate">
-                    {context?.user?.name || "Guest"}
+                    {(context?.user as any)?.name || "Guest"}
                   </p>
                   <p className="text-[12px] text-[#6a7282] leading-tight mt-0.5">
-                    {context?.user?.isAdmin ? "Admin" : "User"}
+                    {(context?.user as any)?.isAdmin ? "Admin" : "User"}
                   </p>
                 </div>
               </button>
@@ -201,94 +243,3 @@ export default function Header() {
     </header>
   );
 }
-
-// Profile Dropdown
-function ProfileDropdown({ navigate, handleLogout, user, closeMenu }: any) {
-  return (
-    <>
-      <DropdownItem
-        icon={<UserCircle className="w-5 h-5 text-[#6412b4]" />}
-        title="Profile"
-        subtitle="View and edit profile"
-        onClick={() => {
-          navigate("/settings");
-          closeMenu();
-        }}
-      />
-      <DropdownItem
-        icon={<Settings className="w-5 h-5 text-[#6412b4]" />}
-        title="Settings"
-        subtitle="Preferences & privacy"
-        onClick={() => {
-          navigate("/settings");
-          closeMenu();
-        }}
-      />
-      <DropdownItem
-        icon={<HelpCircle className="w-5 h-5 text-[#6412b4]" />}
-        title="Help & Support"
-        subtitle="Get assistance"
-        onClick={() => {
-          navigate("/help");
-          closeMenu();
-        }}
-      />
-      {user?.isAdmin && (
-        <DropdownItem
-          icon={<Settings className="w-5 h-5 text-[#6412b4]" />}
-          title="Admin Panel"
-          subtitle="Manage system"
-          onClick={() => {
-            navigate("/admin");
-            closeMenu();
-          }}
-          withDivider
-        />
-      )}
-      <DropdownItem
-        icon={<LogOut className="w-5 h-5" />}
-        title="Logout"
-        subtitle="Sign out of account"
-        onClick={handleLogout}
-        textColor="text-red-600"
-        bgHover="hover:bg-red-50"
-        iconBg="bg-red-100"
-        withDivider
-      />
-    </>
-  );
-}
-
-// Dropdown Item
-function DropdownItem({
-  icon,
-  title,
-  subtitle,
-  onClick,
-  textColor = "text-[#1e2939]",
-  bgHover = "hover:bg-purple-50",
-  iconBg = "bg-purple-100",
-  withDivider = false,
-}: any) {
-  return (
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-      className={`flex items-center gap-4 px-6 py-3 ${textColor} ${bgHover} transition-colors w-full text-left ${
-        withDivider ? "border-t border-gray-100 mt-2 pt-4" : ""
-      }`}
-    >
-      <div className={`w-10 h-10 rounded-full ${iconBg} flex items-center justify-center`}>
-        {icon}
-      </div>
-      <div>
-        <p className="text-[15px] font-medium">{title}</p>
-        {subtitle && <p className="text-[12px] text-[#6a7282]">{subtitle}</p>}
-      </div>
-    </button>
-  );
-}
-
-

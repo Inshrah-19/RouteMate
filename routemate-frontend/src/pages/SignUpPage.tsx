@@ -1,69 +1,83 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useContext } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import { AppContext } from "../App"
-import { toast } from "sonner"
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, CheckCircle2, Shield } from "lucide-react"
-import imgLogo from "../assets/logo.png"
-import { authAPI } from "../services/api"
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { AppContext } from "../App";
+import { toast } from "sonner";
+import {
+  Mail,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  CheckCircle2,
+  Shield,
+} from "lucide-react";
+import imgLogo from "../assets/logo.png";
+import { authAPI } from "../services/api";
 
 export default function SignUpPage() {
-  const context = useContext(AppContext)
-  const navigate = useNavigate()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [fullName, setFullName] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [agreeTerms, setAgreeTerms] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const context = useContext(AppContext);
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+    setLoading(true);
 
     try {
       if (!agreeTerms) {
-        toast.error("Please accept the terms and conditions")
-        setLoading(false)
-        return
+        toast.error("Please accept the terms and conditions");
+        setLoading(false);
+        return;
       }
 
       if (!fullName || !email || !password) {
-        toast.error("Please fill in all fields")
-        setLoading(false)
-        return
+        toast.error("Please fill in all fields");
+        setLoading(false);
+        return;
       }
 
-      const response = await authAPI.signup({ email, password, fullName, phone: "" })
+      const response = await authAPI.signup({
+        email,
+        password,
+        fullName,
+        phone: "",
+      });
 
       // Store token and user data
-      localStorage.setItem("token", response.token)
-      localStorage.setItem("user", JSON.stringify(response.user))
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
 
       context?.setUser({
         id: String(response.user.id),
         name: response.user.fullName,
         email: response.user.email,
         isAdmin: false,
-      })
+      });
 
-      toast.success("Account created successfully! Welcome aboard!")
-      navigate("/home")
+      toast.success("Account created successfully! Welcome aboard!");
+      navigate("/home");
     } catch (error: any) {
-      toast.error(error.message || "Signup failed")
+      toast.error(error.message || "Signup failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleGuestAccess = () => {
-    context?.setIsGuest(true)
-    toast.success("Continuing as guest - Limited features available")
-    navigate("/home")
-  }
+    context?.setIsGuest(true);
+    toast.success("Continuing as guest - Limited features available");
+    navigate("/home");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#6412b4] via-[#9333ea] to-[#c084fc] flex items-center justify-center p-6 relative overflow-hidden">
@@ -77,16 +91,25 @@ export default function SignUpPage() {
         <div className="flex items-center justify-center order-2 lg:order-1">
           <div className="w-full max-w-md bg-white rounded-[32px] shadow-2xl p-10">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#6412b4] to-[#9333ea] shadow-lg flex items-center justify-center mb-4 p-2.5 lg:hidden">
-                <img src={imgLogo || "/placeholder.svg"} alt="RouteMate" className="w-full h-full object-contain" />
-              </div>
-              <h2 className="text-[32px] font-extrabold text-[#2c084e] mb-2">Create Account</h2>
-              <p className="text-[15px] text-[#6a7282]">Join RouteMate and start your smart journey today</p>
+              <img
+                src={imgLogo}
+                alt="RouteMate Logo"
+                className="h-24 w-auto object-contain drop-shadow-[0_0_5px_rgba(255,255,255,0.7)] mx-auto lg:hidden"
+              />
+
+              <h2 className="text-[32px] font-extrabold text-[#2c084e] mb-2">
+                Create Account
+              </h2>
+              <p className="text-[15px] text-[#6a7282]">
+                Join RouteMate and start your smart journey today
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">Full Name</label>
+                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">
+                  Full Name
+                </label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                   <input
@@ -100,7 +123,9 @@ export default function SignUpPage() {
               </div>
 
               <div>
-                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">Email Address</label>
+                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">
+                  Email Address
+                </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                   <input
@@ -114,7 +139,9 @@ export default function SignUpPage() {
               </div>
 
               <div>
-                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">Password</label>
+                <label className="block text-[14px] font-semibold text-[#2c084e] mb-2">
+                  Password
+                </label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#9ca3af]" />
                   <input
@@ -129,10 +156,16 @@ export default function SignUpPage() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#6a7282] hover:text-[#6412b4]"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
-                <p className="text-[12px] text-[#6a7282] mt-1.5">Must be at least 8 characters</p>
+                <p className="text-[12px] text-[#6a7282] mt-1.5">
+                  Must be at least 8 characters
+                </p>
               </div>
 
               <label className="flex items-start gap-3 cursor-pointer group">
@@ -144,11 +177,17 @@ export default function SignUpPage() {
                 />
                 <span className="text-[14px] text-[#2c084e] leading-snug">
                   I agree to the{" "}
-                  <button type="button" className="text-[#6412b4] font-semibold hover:underline">
+                  <button
+                    type="button"
+                    className="text-[#6412b4] font-semibold hover:underline"
+                  >
                     Terms of Service
                   </button>{" "}
                   and{" "}
-                  <button type="button" className="text-[#6412b4] font-semibold hover:underline">
+                  <button
+                    type="button"
+                    className="text-[#6412b4] font-semibold hover:underline"
+                  >
                     Privacy Policy
                   </button>
                 </span>
@@ -159,7 +198,9 @@ export default function SignUpPage() {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-[#6412b4] to-[#9333ea] text-white py-3.5 rounded-xl hover:shadow-xl hover:shadow-purple-500/40 hover:scale-[1.02] transition-all text-[16px] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <span>{loading ? "Creating Account..." : "Create Your Account"}</span>
+                <span>
+                  {loading ? "Creating Account..." : "Create Your Account"}
+                </span>
                 <ArrowRight className="w-5 h-5" />
               </button>
 
@@ -168,7 +209,9 @@ export default function SignUpPage() {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="px-4 bg-white text-[14px] text-[#6a7282] font-medium">or</span>
+                  <span className="px-4 bg-white text-[14px] text-[#6a7282] font-medium">
+                    or
+                  </span>
                 </div>
               </div>
 
@@ -184,7 +227,10 @@ export default function SignUpPage() {
             <div className="text-center mt-8 pt-6 border-t border-gray-100">
               <p className="text-[15px] text-[#6a7282]">
                 Already have an account?{" "}
-                <Link to="/signin" className="text-[#6412b4] font-bold hover:text-[#9333ea]">
+                <Link
+                  to="/signin"
+                  className="text-[#6412b4] font-bold hover:text-[#9333ea]"
+                >
                   Sign in
                 </Link>
               </p>
@@ -194,9 +240,12 @@ export default function SignUpPage() {
             <div className="mt-6 flex items-start gap-3 bg-purple-50 rounded-xl p-4">
               <Shield className="w-5 h-5 text-[#6412b4] mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-[13px] font-semibold text-[#2c084e] mb-1">Your data is secure</p>
+                <p className="text-[13px] font-semibold text-[#2c084e] mb-1">
+                  Your data is secure
+                </p>
                 <p className="text-[12px] text-[#6a7282] leading-relaxed">
-                  We use industry-standard encryption to protect your personal information.
+                  We use industry-standard encryption to protect your personal
+                  information.
                 </p>
               </div>
             </div>
@@ -206,12 +255,18 @@ export default function SignUpPage() {
         {/* ... existing right side branding ... */}
         <div className="hidden lg:flex flex-col justify-center items-start text-white p-12 order-1 lg:order-2">
           <div className="mb-8">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#6412b4] to-[#9333ea] shadow-2xl flex items-center justify-center mb-6 p-3">
-              <img src={imgLogo || "/placeholder.svg"} alt="RouteMate" className="w-full h-full object-contain" />
-            </div>
-            <h1 className="text-[56px] font-extrabold leading-tight mb-4">Start Your Smart Journey</h1>
+            <img
+              src={imgLogo}
+              alt="RouteMate Logo"
+              className="h-20 w-auto object-contain mr-5 drop-shadow-[0_0_5px_rgba(255,255,255,0.6)]"
+            />
+
+            <h1 className="text-[56px] font-extrabold leading-tight mb-4">
+              Start Your Smart Journey
+            </h1>
             <p className="text-[20px] text-white/90 leading-relaxed mb-8">
-              Join thousands of commuters who trust RouteMate for their daily travel needs.
+              Join thousands of commuters who trust RouteMate for their daily
+              travel needs.
             </p>
           </div>
 
@@ -222,7 +277,9 @@ export default function SignUpPage() {
               </div>
               <div>
                 <p className="text-[18px] font-semibold">Real-time Tracking</p>
-                <p className="text-[14px] text-white/70">Live bus locations and accurate ETAs</p>
+                <p className="text-[14px] text-white/70">
+                  Live bus locations and accurate ETAs
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -231,7 +288,9 @@ export default function SignUpPage() {
               </div>
               <div>
                 <p className="text-[18px] font-semibold">Smart Planning</p>
-                <p className="text-[14px] text-white/70">AI-powered route suggestions</p>
+                <p className="text-[14px] text-white/70">
+                  AI-powered route suggestions
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -240,7 +299,9 @@ export default function SignUpPage() {
               </div>
               <div>
                 <p className="text-[18px] font-semibold">Push Notifications</p>
-                <p className="text-[14px] text-white/70">Never miss your bus again</p>
+                <p className="text-[14px] text-white/70">
+                  Never miss your bus again
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -248,15 +309,21 @@ export default function SignUpPage() {
                 <CheckCircle2 className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-[18px] font-semibold">Personalized Experience</p>
-                <p className="text-[14px] text-white/70">Save favorites and preferences</p>
+                <p className="text-[18px] font-semibold">
+                  Personalized Experience
+                </p>
+                <p className="text-[14px] text-white/70">
+                  Save favorites and preferences
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="text-[14px] text-white/70">© 2025 RouteMate. Smart Transport Solution.</div>
+          <div className="text-[14px] text-white/70">
+            © 2025 RouteMate. Smart Transport Solution.
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
