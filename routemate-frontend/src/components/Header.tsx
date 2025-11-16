@@ -157,7 +157,7 @@ export default function Header() {
             <img
               src={imgLogo}
               alt="RouteMate Logo"
-              className="h-14 w-auto object-contain scale-150 mr-4"
+              className="h-10git  w-auto object-contain scale-150 mr-4"
               style={{ transformOrigin: "center" }}
             />
 
