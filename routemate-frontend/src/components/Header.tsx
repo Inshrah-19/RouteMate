@@ -104,17 +104,20 @@ export default function Header() {
     <header className="bg-white/90 backdrop-blur-xl border-b-2 border-white/60 sticky top-0 z-40 shadow-sm">
       <div className="max-w-[1400px] mx-auto px-3 sm:px-6 py-4 flex items-center justify-between">
         {/* Left: Back Button + Menu + Logo */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-3 sm:gap-4 relative">
+
+
           {location.pathname !== "/home" && (
-            <button
-              onClick={handleGoBack}
-              className="p-2 rounded-lg hover:bg-purple-100 transition-colors hover:scale-110 active:scale-95"
-              title="Go back to previous page"
-              aria-label="Go back"
-            >
-              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#2c084e]" />
-            </button>
-          )}
+  <button
+    onClick={handleGoBack}
+    className="p-2 rounded-lg hover:bg-purple-100 transition-colors hover:scale-110 active:scale-95 
+               absolute -bottom-8 left-0 sm:static"
+    title="Go back"
+  >
+    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6 text-[#2c084e]" />
+  </button>
+)}
+
 
           {/* Mobile Menu */}
           <div className="relative md:hidden">
