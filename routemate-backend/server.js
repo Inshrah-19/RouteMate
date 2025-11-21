@@ -9,6 +9,7 @@ const routeRoutes = require('./routes/routeRoutes');
 const busRoutes = require('./routes/busRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const favoritesRoutes = require('./routes/favoritesRoutes');
+const stopsRoutes = require("./routes/stopsRoutes")
 const app = express();
 
 // Middleware
@@ -21,6 +22,7 @@ app.use('/api/routes', routeRoutes);
 app.use('/api/buses', busRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/favorites', favoritesRoutes);
+app.use("/api/stops", stopsRoutes)
 
 // Health check
 app.get('/api/health', (req, res) => {

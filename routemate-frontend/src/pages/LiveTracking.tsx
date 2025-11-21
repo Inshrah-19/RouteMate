@@ -4,9 +4,9 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import Header from "../components/Header"
 import Footer from "../components/Footer"
-import { MapPin, Navigation, Clock, Radio, RefreshCw, Search, Filter, ChevronDown, TrendingUp } from 'lucide-react'
+import { MapPin, Navigation, Clock, Radio, RefreshCw, Search, Filter, ChevronDown, TrendingUp } from "lucide-react"
 import { toast } from "sonner"
-import { busAPI } from "../services/api"
+import { busAPI, stopsAPI } from "../services/api"
 import svgPaths from "../imports/svg-wjwxf1kg3t"
 
 export default function LiveTracking() {
@@ -19,6 +19,7 @@ export default function LiveTracking() {
   const [sortBy, setSortBy] = useState("time")
   const [showSortDropdown, setShowSortDropdown] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [routeStops, setRouteStops] = useState<any[]>([])
   const sortDropdownRef = useRef<HTMLDivElement>(null)
 
   const sortOptions = [
@@ -34,26 +35,37 @@ export default function LiveTracking() {
   const fetchBusData = async () => {
     try {
       if (busId) {
-        const bus = await busAPI.getAllBuses()
-        const selectedBus = bus.find((b: any) => b.id === parseInt(busId))
+        const buses = await busAPI.getAllBuses()
+        const selectedBus = buses.find((b: any) => b.id === Number.parseInt(busId))
+
         if (selectedBus) {
+          const stops = await stopsAPI.getRouteStops(selectedBus.routeId)
+          setRouteStops(stops)
+
+          // Get next stop based on current position (assume 40% through journey)
+          const nextStopIndex = Math.floor(stops.length * 0.4)
+          const nextStop = stops[nextStopIndex] || stops[stops.length - 1]
+
           setBusInfo({
+            id: selectedBus.id,
             number: selectedBus.busNumber,
             route: `${selectedBus.Route?.source} → ${selectedBus.Route?.destination}`,
-            currentLocation: "In Transit",
-            nextStop: selectedBus.Route?.destination || "Next Stop",
+            currentLocation: stops[Math.max(0, nextStopIndex - 1)]?.stopName || "In Transit",
+            nextStop: nextStop?.stopName || "Next Stop",
             eta: "5 mins",
-            stopsRemaining: 8,
-            progress: 65,
+            stopsRemaining: Math.max(0, stops.length - nextStopIndex),
+            progress: 40,
             speed: "45 km/h",
             passengers: `${selectedBus.totalSeats - selectedBus.availableSeats}/${selectedBus.totalSeats}`,
             departureTime: selectedBus.departureTime,
             arrivalTime: selectedBus.arrivalTime,
             fare: selectedBus.fare,
+            routeId: selectedBus.routeId,
           })
         }
       }
     } catch (error) {
+      console.error("[v0] Error fetching bus data:", error)
       toast.error("Failed to fetch bus data")
     } finally {
       setLoading(false)
@@ -78,22 +90,21 @@ export default function LiveTracking() {
     }
   }
 
-  const upcomingStops = [
-    { name: "University Gate", time: "5 mins", status: "next", passengers: 5 },
-    { name: "Tech Park", time: "12 mins", status: "upcoming", passengers: 8 },
-    { name: "Shopping Mall", time: "18 mins", status: "upcoming", passengers: 12 },
-    { name: "Hospital", time: "25 mins", status: "upcoming", passengers: 3 },
-    { name: "Airport", time: "35 mins", status: "destination", passengers: 0 },
-  ]
+  const upcomingStops = routeStops.map((stop, index) => ({
+    name: stop.stopName,
+    time: `${5 + index * 5} mins`,
+    status: index === 0 ? "next" : index === routeStops.length - 1 ? "destination" : "upcoming",
+    passengers: Math.floor(Math.random() * 15),
+  }))
 
-  const stopMarkers = [
-    { name: "Central Station", lat: 40.7128, lng: -74.006, passed: true },
-    { name: "City Center", lat: 40.7148, lng: -74.004, passed: true },
-    { name: "Mall Road", lat: 40.7168, lng: -74.002, current: true },
-    { name: "University", lat: 40.7188, lng: -74.0, upcoming: true },
-    { name: "Tech Park", lat: 40.7208, lng: -73.998, upcoming: true },
-    { name: "Airport", lat: 40.7228, lng: -73.996, upcoming: true },
-  ]
+  const stopMarkers = routeStops.map((stop, idx) => ({
+    name: stop.stopName,
+    lat: 40.7128 + idx * 0.005,
+    lng: -74.006 + idx * 0.005,
+    passed: idx < Math.floor(routeStops.length * 0.4),
+    current: idx === Math.floor(routeStops.length * 0.4),
+    upcoming: idx > Math.floor(routeStops.length * 0.4),
+  }))
 
   if (loading) {
     return (
@@ -187,7 +198,9 @@ export default function LiveTracking() {
                     </p>
                     <p className="text-[#2c084e] text-xs sm:text-sm md:text-base sm:hidden">Sort</p>
                   </div>
-                  <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 text-[#2c084e] transition-transform ${showSortDropdown ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`w-4 h-4 sm:w-5 sm:h-5 text-[#2c084e] transition-transform ${showSortDropdown ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {showSortDropdown && (
@@ -278,20 +291,25 @@ export default function LiveTracking() {
                         stop.passed
                           ? "bg-[#6412b4] border-[#6412b4]"
                           : stop.current
-                          ? "bg-white border-[#6412b4] animate-pulse"
-                          : "bg-white border-gray-300"
+                            ? "bg-white border-[#6412b4] animate-pulse"
+                            : "bg-white border-gray-300"
                       }`}
                     />
-                    <div className={`absolute top-7 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-white px-2 py-1 rounded-lg shadow-md text-xs ${
-                      stop.current ? "border-2 border-[#6412b4]" : "border border-gray-200"
-                    }`}>
+                    <div
+                      className={`absolute top-7 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-white px-2 py-1 rounded-lg shadow-md text-xs ${
+                        stop.current ? "border-2 border-[#6412b4]" : "border border-gray-200"
+                      }`}
+                    >
                       {stop.name}
                     </div>
                   </div>
                 ))}
 
                 {/* Moving Bus Icon */}
-                <div className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-1000" style={{ left: "43%", top: "50%" }}>
+                <div
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-1000"
+                  style={{ left: "43%", top: "50%" }}
+                >
                   <div className="relative">
                     <div className="absolute inset-0 -m-4">
                       <div className="w-24 h-24 bg-[#6412b4] rounded-full animate-ping opacity-20" />
@@ -341,7 +359,10 @@ export default function LiveTracking() {
             {/* Updates Badge */}
             <div className="bg-[#299dd3] rounded-2xl px-4 sm:px-6 py-2 sm:py-3 shadow-xl w-fit">
               <div className="flex items-center gap-2 sm:gap-3">
-                <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-spin" style={{ animationDuration: "3s" }} />
+                <RefreshCw
+                  className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-spin"
+                  style={{ animationDuration: "3s" }}
+                />
                 <p className="text-white font-semibold text-xs sm:text-sm">Updates every 5 seconds</p>
               </div>
             </div>
@@ -351,16 +372,22 @@ export default function LiveTracking() {
           <div className="space-y-4 sm:space-y-6">
             {/* Bus Status Card */}
             <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all">
-              <h3 className="text-[#2c084e] mb-4 text-base sm:text-lg font-bold">{busInfo?.number || `Bus ${busId}`}</h3>
+              <h3 className="text-[#2c084e] mb-4 text-base sm:text-lg font-bold">
+                {busInfo?.number || `Bus ${busId}`}
+              </h3>
 
               <div className="space-y-3 sm:space-y-4">
                 <div className="p-2 sm:p-3 hover:bg-[#f8f4ff] rounded-xl transition-all">
                   <p className="text-[#6a7282] text-xs sm:text-sm">Current Location</p>
-                  <p className="text-[#1e2939] font-semibold text-sm sm:text-base">{busInfo?.currentLocation || "In Transit"}</p>
+                  <p className="text-[#1e2939] font-semibold text-sm sm:text-base">
+                    {busInfo?.currentLocation || "In Transit"}
+                  </p>
                 </div>
                 <div className="p-2 sm:p-3 hover:bg-[#f8f4ff] rounded-xl transition-all">
                   <p className="text-[#6a7282] text-xs sm:text-sm">Next Stop</p>
-                  <p className="text-[#1e2939] font-semibold text-sm sm:text-base">{busInfo?.nextStop || "Next Stop"}</p>
+                  <p className="text-[#1e2939] font-semibold text-sm sm:text-base">
+                    {busInfo?.nextStop || "Next Stop"}
+                  </p>
                 </div>
                 <div className="p-2 sm:p-3 hover:bg-[#f8f4ff] rounded-xl transition-all">
                   <p className="text-[#6a7282] text-xs sm:text-sm">ETA</p>
@@ -374,7 +401,9 @@ export default function LiveTracking() {
                   </div>
                   <div className="text-center bg-[#f9f9ff] rounded-xl py-2 sm:py-3 px-2">
                     <p className="text-[#6a7282] text-xs sm:text-sm">Occupancy</p>
-                    <p className="font-semibold text-[#6412b4] text-sm sm:text-base">{busInfo?.passengers || "28/40"}</p>
+                    <p className="font-semibold text-[#6412b4] text-sm sm:text-base">
+                      {busInfo?.passengers || "28/40"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -396,11 +425,11 @@ export default function LiveTracking() {
                   >
                     <div>
                       <p className="font-medium text-[#1e2939] text-xs sm:text-sm">{stop.name}</p>
-                      {stop.passengers > 0 && (
-                        <p className="text-xs text-[#6a7282]">{stop.passengers} waiting</p>
-                      )}
+                      {stop.passengers > 0 && <p className="text-xs text-[#6a7282]">{stop.passengers} waiting</p>}
                     </div>
-                    <span className={`text-xs sm:text-sm font-semibold ${stop.status === "next" ? "text-[#6412b4]" : "text-[#6a7282]"}`}>
+                    <span
+                      className={`text-xs sm:text-sm font-semibold ${stop.status === "next" ? "text-[#6412b4]" : "text-[#6a7282]"}`}
+                    >
                       {stop.time}
                     </span>
                   </div>
@@ -424,8 +453,8 @@ export default function LiveTracking() {
                         stop.status === "next"
                           ? "bg-[#6412b4] animate-pulse"
                           : stop.status === "destination"
-                          ? "bg-green-500"
-                          : "bg-gray-300"
+                            ? "bg-green-500"
+                            : "bg-gray-300"
                       }`}
                     />
                     <p className="text-[10px] text-[#1e2939] truncate text-center">{stop.name}</p>

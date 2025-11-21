@@ -92,11 +92,9 @@ export const feedbackAPI = {
 
 // Favorites API endpoints
 export const favoritesAPI = {
-  getFavorites: (token: string) =>
-    makeRequest("/favorites/user", "GET", undefined, token),
+  getFavorites: (token: string) => makeRequest("/favorites/user", "GET", undefined, token),
 
-  addFavorite: (routeId: number, token: string) =>
-    makeRequest("/favorites/add", "POST", { routeId }, token),
+  addFavorite: (routeId: number, token: string) => makeRequest("/favorites/add", "POST", { routeId }, token),
 
   removeFavorite: (favoriteId: number, token: string) =>
     makeRequest(`/favorites/${favoriteId}`, "DELETE", undefined, token),
@@ -104,9 +102,14 @@ export const favoritesAPI = {
 
 // LiveTracking API endpoint
 export const trackingAPI = {
-  getBusDetails: (busId: number) =>
-    makeRequest(`/buses/${busId}`),
+  getBusDetails: (busId: number) => makeRequest(`/buses/${busId}`),
 
-  getBusByRoute: (routeId: number) =>
-    makeRequest(`/buses/route/${routeId}`),
+  getBusByRoute: (routeId: number) => makeRequest(`/buses/route/${routeId}`),
+}
+
+// RouteStops API endpoints
+export const stopsAPI = {
+  getRouteStops: (routeId: number) => makeRequest(`/stops/route/${routeId}`),
+
+  getAllStops: () => makeRequest("/stops/all"),
 }
