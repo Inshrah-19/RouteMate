@@ -1,6 +1,15 @@
 {
   "build": {
-    "builder": "NIXPACKS",
-    "path": "routemate-backend"
+    "nixpacksPlan": {
+      "phases": {
+        "setup": {
+          "nixPkgs": ["nodejs"]
+        }
+      }
+    }
+  },
+  "deploy": {
+    "restartPolicyType": "ON_FAILURE",
+    "serviceRoot": "backend/"
   }
 }
