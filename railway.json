@@ -1,15 +1,9 @@
 {
   "build": {
-    "nixpacksPlan": {
-      "phases": {
-        "setup": {
-          "nixPkgs": ["nodejs"]
-        }
-      }
-    }
+    "builder": "NIXPACKS",
+    "path": "backend"
   },
   "deploy": {
-    "restartPolicyType": "ON_FAILURE",
-    "serviceRoot": "backend/"
+    "startCommand": "npm start"
   }
 }
