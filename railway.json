@@ -1,9 +1,0 @@
-{
-  "build": {
-    "builder": "NIXPACKS",
-    "path": "routemate-backend"
-  },
-  "deploy": {
-    "startCommand": "npm start"
-  }
-}
