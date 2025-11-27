@@ -106,6 +106,58 @@ export default function LiveTracking() {
     upcoming: idx > Math.floor(routeStops.length * 0.4),
   }))
 
+  const generateRoutePath = () => {
+    if (stopMarkers.length < 2) return "M 0 0"
+
+    // Calculate path coordinates using the same percentage logic as the markers
+    // Container is 100% width and height, we'll use normalized coordinates
+    const points = stopMarkers.map((stop, idx) => {
+      const x = 15 + idx * 14 // percentage as number
+      const y = 85 - idx * 13 // percentage as number
+      return { x, y }
+    })
+
+    // Create smooth quadratic bezier curve through points
+    let pathData = `M ${points[0].x} ${points[0].y}`
+    for (let i = 1; i < points.length; i++) {
+      if (i === 1) {
+        pathData += ` Q ${(points[0].x + points[1].x) / 2} ${(points[0].y + points[1].y) / 2}, ${points[1].x} ${points[1].y}`
+      } else {
+        const prevPoint = points[i - 1]
+        const currPoint = points[i]
+        const controlX = (prevPoint.x + currPoint.x) / 2
+        const controlY = (prevPoint.y + currPoint.y) / 2
+        pathData += ` Q ${controlX} ${controlY}, ${currPoint.x} ${currPoint.y}`
+      }
+    }
+    return pathData
+  }
+
+  const generateCompletedPath = () => {
+    if (stopMarkers.length < 2) return "M 0 0"
+    const currentIdx = Math.floor(routeStops.length * 0.4)
+    const points = stopMarkers.slice(0, currentIdx + 1).map((stop, idx) => {
+      const x = 15 + idx * 14
+      const y = 85 - idx * 13
+      return { x, y }
+    })
+
+    if (points.length < 2) return "M 0 0"
+    let pathData = `M ${points[0].x} ${points[0].y}`
+    for (let i = 1; i < points.length; i++) {
+      if (i === 1) {
+        pathData += ` Q ${(points[0].x + points[1].x) / 2} ${(points[0].y + points[1].y) / 2}, ${points[1].x} ${points[1].y}`
+      } else {
+        const prevPoint = points[i - 1]
+        const currPoint = points[i]
+        const controlX = (prevPoint.x + currPoint.x) / 2
+        const controlY = (prevPoint.y + currPoint.y) / 2
+        pathData += ` Q ${controlX} ${controlY}, ${currPoint.x} ${currPoint.y}`
+      }
+    }
+    return pathData
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#f7eaff] from-[62.5%] to-[#948c99]">
@@ -258,22 +310,28 @@ export default function LiveTracking() {
                   <rect width="100%" height="100%" fill="url(#grid)" />
                 </svg>
 
-                {/* Route Path */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                {/* Route Path - Now uses viewBox for responsive scaling */}
+                <svg
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                >
+                  {/* Dashed path (upcoming route) */}
                   <path
-                    d="M 80 500 Q 200 450, 300 380 Q 400 310, 500 280 Q 600 250, 700 200 Q 800 150, 900 100"
+                    d={generateRoutePath()}
                     fill="none"
                     stroke="#6412b4"
-                    strokeWidth="6"
+                    strokeWidth="1.5"
                     strokeLinecap="round"
-                    strokeDasharray="15,10"
+                    strokeDasharray="8,6"
                     opacity="0.4"
                   />
+                  {/* Solid path (completed route) */}
                   <path
-                    d="M 80 500 Q 200 450, 300 380 Q 400 310, 420 295"
+                    d={generateCompletedPath()}
                     fill="none"
                     stroke="#6412b4"
-                    strokeWidth="6"
+                    strokeWidth="1.5"
                     strokeLinecap="round"
                     opacity="0.8"
                   />

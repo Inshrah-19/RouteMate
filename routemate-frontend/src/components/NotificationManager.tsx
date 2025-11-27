@@ -28,7 +28,7 @@ export default function NotificationManager() {
         addNotification({
           id: (Date.now() + 1).toString(),
           title: 'Bus Update',
-          message: 'Bus 12A is delayed by 5 minutes',
+          message: 'EV3 is delayed by 5 minutes',
           type: 'warning'
         });
       }, 5000);
@@ -38,7 +38,7 @@ export default function NotificationManager() {
         addNotification({
           id: (Date.now() + 2).toString(),
           title: 'Route Change',
-          message: 'Bus 34B is now running on schedule',
+          message: 'Bus 55 is now running on schedule',
           type: 'success'
         });
       }, 10000);
