@@ -32,9 +32,9 @@ export default function SignInPage() {
 
       const response = await authAPI.login({ email, password });
 
-      // Store token and user data
-      localStorage.setItem("token", response.token);
-      localStorage.setItem("user", JSON.stringify(response.user));
+      // Store token and user in sessionStorage
+      sessionStorage.setItem("token", response.token);
+      sessionStorage.setItem("user", JSON.stringify(response.user));
 
       context?.setUser({
         id: String(response.user.id),
