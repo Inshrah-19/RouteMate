@@ -16,7 +16,7 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false); // kept for UI, but not used in storage
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,12 +32,9 @@ export default function SignInPage() {
 
       const response = await authAPI.login({ email, password });
 
-      // ============================================
-      // FIXED LOGIN PERSISTENCE (OPTION C)
-      // Always store in sessionStorage
-      // ============================================
-      sessionStorage.setItem("token", response.token);
-      sessionStorage.setItem("user", JSON.stringify(response.user));
+      // Store token and user data
+      localStorage.setItem("token", response.token);
+      localStorage.setItem("user", JSON.stringify(response.user));
 
       context?.setUser({
         id: String(response.user.id),

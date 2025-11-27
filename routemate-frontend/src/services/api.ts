@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://backend-3rd-environment.up.railway.app/api"
+const API_BASE_URL = "http://localhost:5000/api"
 
 // Helper function for making requests
 const makeRequest = async (
