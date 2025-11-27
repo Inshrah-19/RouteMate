@@ -111,7 +111,7 @@ export default function LiveTracking() {
 
     // Calculate path coordinates using the same percentage logic as the markers
     // Container is 100% width and height, we'll use normalized coordinates
-    const points = stopMarkers.map((stop, idx) => {
+    const points = stopMarkers.map((_stop, idx) => {
       const x = 15 + idx * 14 // percentage as number
       const y = 85 - idx * 13 // percentage as number
       return { x, y }
@@ -136,7 +136,7 @@ export default function LiveTracking() {
   const generateCompletedPath = () => {
     if (stopMarkers.length < 2) return "M 0 0"
     const currentIdx = Math.floor(routeStops.length * 0.4)
-    const points = stopMarkers.slice(0, currentIdx + 1).map((stop, idx) => {
+    const points = stopMarkers.slice(0, currentIdx + 1).map((_stop, idx) => {
       const x = 15 + idx * 14
       const y = 85 - idx * 13
       return { x, y }
