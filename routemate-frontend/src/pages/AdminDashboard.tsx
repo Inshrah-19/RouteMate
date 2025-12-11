@@ -32,7 +32,7 @@ export default function AdminDashboard() {
   const isRoutesView =
     location.pathname === "/admin" || location.pathname === "/admin/";
   const isBusesView = location.pathname.includes("/admin/buses");
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   useEffect(() => {
     fetchData();

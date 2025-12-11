@@ -11,8 +11,11 @@ const makeRequest = async (
     "Content-Type": "application/json",
   }
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`
+  // Always read token from sessionStorage if not passed manually
+  const storedToken = sessionStorage.getItem("token");
+
+  if (token || storedToken) {
+    headers["Authorization"] = `Bearer ${token || storedToken}`;
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -28,6 +31,7 @@ const makeRequest = async (
 
   return response.json()
 }
+
 
 // Authentication APIs
 export const authAPI = {
