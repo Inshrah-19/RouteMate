@@ -15,7 +15,8 @@ export default function Favorites() {
   const [favorites, setFavorites] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [expandedCard, setExpandedCard] = useState<string | null>(null)
-  const token = localStorage.getItem("token")
+  const token = sessionStorage.getItem("token")
+
 
   useEffect(() => {
     fetchFavoritesAndRoutes()
