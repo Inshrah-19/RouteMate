@@ -66,7 +66,7 @@ function App() {
   const [favorites, setFavorites] = useState<BusRoute[]>([
     {
       id: "1",
-      busNumber: "Bus 12A",
+      busNumber: "Bus 51",
       from: "Central Station",
       to: "Airport",
       frequency: "Every 15 mins",
@@ -75,7 +75,7 @@ function App() {
     },
     {
       id: "2",
-      busNumber: "Bus 45B",
+      busNumber: "Thatta Bus",
       from: "Mall road",
       to: "University",
       frequency: "Every 15 mins",
@@ -84,7 +84,7 @@ function App() {
     },
     {
       id: "3",
-      busNumber: "Bus 93X",
+      busNumber: "Bus 55(back)",
       from: "Tech park",
       to: "Shopping centre",
       frequency: "Every 15 mins",
@@ -93,7 +93,7 @@ function App() {
     },
     {
       id: "4",
-      busNumber: "Bus 78C",
+      busNumber: "Bus 51(Return)",
       from: "Downtown",
       to: "Hospital",
       frequency: "Every 15 mins",

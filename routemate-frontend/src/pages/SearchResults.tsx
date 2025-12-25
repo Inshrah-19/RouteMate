@@ -166,7 +166,7 @@ export default function SearchResults() {
         context?.removeFavorite(bus.id);
         toast.success('Removed from favorites');
       } else {
-        const token = localStorage.getItem('token');
+        const token = sessionStorage.getItem('token');  // Use sessionStorage like api.ts expects
         if (token) {
           await favoritesAPI.addFavorite(bus.routeId, token);
         }
